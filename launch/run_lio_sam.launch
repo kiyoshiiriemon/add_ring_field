@@ -1,0 +1,29 @@
+<launch>
+
+    <arg name="project" default="lio_sam"/>
+
+    <node pkg="imu_filter_madgwick" name="filter_madgwick" type="imu_filter_node">
+        <remap from="imu/data" to="madgwick/imu"/>
+        <remap from="imu/data_raw" to="hokuyo3d/imu"/>
+    </node>
+
+    <node pkg="add_ring_field" name="add_ring_field" type="add_ring_field_node">
+        <remap from="input_pointcloud" to="hokuyo3d/hokuyo_cloud2"/>
+    </node>
+
+    <!-- Parameters -->
+    <rosparam file="$(find add_ring_field)/config/params_lio_sam.yaml" command="load" />
+
+    <!--- LOAM -->
+    <include file="$(find lio_sam)/launch/include/module_loam.launch" />
+
+    <!--- Robot State TF -->
+    <include file="$(find lio_sam)/launch/include/module_robot_state_publisher.launch" />
+
+    <!--- Run Navsat -->
+    <include file="$(find lio_sam)/launch/include/module_navsat.launch" />
+
+    <!--- Run Rviz-->
+    <include file="$(find lio_sam)/launch/include/module_rviz.launch" />
+
+</launch>
