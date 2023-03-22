@@ -28,7 +28,7 @@ void callback(const sensor_msgs::PointCloud2ConstPtr& msg)
   // Add extra field "ring" to PointCloud2
   sensor_msgs::PointCloud2 cloud_ros;
   for(int i=0; i< cloud_xyzri->points.size(); ++i){
-      cloud_xyzri->points[i].ring = 1;
+      cloud_xyzri->points[i].ring = 0;
   }
   std::cout << "pcd " << cloud_xyzri->width << " " << cloud_xyzri->height << std::endl;
   cloud_xyzri->is_dense = true;
