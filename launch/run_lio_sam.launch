@@ -1,12 +1,15 @@
 <launch>
 
     <arg name="project" default="lio_sam"/>
+    <arg name="imu_topic"   default = "hokuyo3d/imu_corrected" doc = "IMU raw data (input to madgwick filter)" />
 
     <node pkg="imu_filter_madgwick" name="filter_madgwick" type="imu_filter_node">
-        <remap from="imu/data" to="madgwick/imu"/>
-        <remap from="imu/data_raw" to="hokuyo3d/imu"/>
+        <remap from="imu/data" to="madgwick/imu/data"/>
+        <remap from="imu/data_raw" to="$(arg imu_topic)"/>
+        <param name="use_mag" type="bool" value="false" />
     </node>
 
+    <node pkg="add_ring_field" name="convert_imu" type="convert_yvt_imu.py" />
     <node pkg="add_ring_field" name="add_ring_field" type="add_ring_field_node">
         <remap from="input_pointcloud" to="hokuyo3d/hokuyo_cloud2"/>
     </node>
